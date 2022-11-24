@@ -106,17 +106,17 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
         context,
         PageRouteBuilder(
           opaque: opaque,
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              PasscodeScreen(
+          pageBuilder: (_, __, ___) => PasscodeScreen(
             title: Text(
               'Enter App Passcode',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white, fontSize: 28),
             ),
             circleUIConfig: circleUIConfig,
-            keyboardUIConfig: keyboardUIConfig,
+            keyboardUIConfig: KeyboardUIConfig(
+              keyboardSize: const Size(300, 300),
+            ),
             passwordEnteredCallback: _onPasscodeEntered,
-            cancelButton: cancelButton,
             deleteButton: Text(
               'Delete',
               style: const TextStyle(fontSize: 16, color: Colors.white),
@@ -127,7 +127,6 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             cancelCallback: _onPasscodeCancelled,
             digits: digits,
             passwordDigits: 6,
-            bottomWidget: _buildPasscodeRestoreButton(),
             onForgotPasswordPressed: () {},
             forgotPassButton: Container(
               child: Text(
@@ -158,27 +157,6 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
     _verificationNotifier.close();
     super.dispose();
   }
-
-  _buildPasscodeRestoreButton() => Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 10.0, top: 20.0),
-          child: TextButton(
-            child: Text(
-              "Reset passcode",
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w300),
-            ),
-            onPressed: _resetAppPassword,
-            // splashColor: Colors.white.withOpacity(0.4),
-            // highlightColor: Colors.white.withOpacity(0.2),
-            // ),
-          ),
-        ),
-      );
 
   _resetAppPassword() {
     Navigator.maybePop(context).then((result) {

@@ -17,7 +17,6 @@ class PasscodeScreen extends StatefulWidget {
   final int passwordDigits;
   final PasswordEnteredCallback passwordEnteredCallback;
   // Cancel button and delete button will be switched based on the screen state
-  final Widget cancelButton;
   final Widget deleteButton;
   final Widget forgotPassButton;
   final Stream<bool> shouldTriggerVerification;
@@ -39,7 +38,6 @@ class PasscodeScreen extends StatefulWidget {
     required this.title,
     this.passwordDigits = 6,
     required this.passwordEnteredCallback,
-    required this.cancelButton,
     required this.deleteButton,
     required this.shouldTriggerVerification,
     required this.onForgotPasswordPressed,
@@ -117,7 +115,6 @@ class _PasscodeScreenState extends State<PasscodeScreen>
                   widget.title,
                   Container(
                     margin: const EdgeInsets.only(top: 20),
-                    height: 40,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: _buildCircles(),

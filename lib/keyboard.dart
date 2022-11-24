@@ -90,7 +90,6 @@ class Keyboard extends StatelessWidget {
         : Size(keyboardWidth, keyboardHeight);
     return Container(
       width: keyboardSize.width,
-      height: keyboardSize.height,
       margin: EdgeInsets.only(top: 16),
       child: RawKeyboardListener(
         focusNode: _focusNode,

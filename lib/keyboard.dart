@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:passcode_screen/passcode_screen.dart';
 
 typedef KeyboardTapCallback = void Function(String text);
 
@@ -40,10 +41,19 @@ class Keyboard extends StatelessWidget {
   //should have a proper order [1...9, 0]
   final List<String>? digits;
 
+  final void Function()? onForgotPasswordPressed;
+  final void Function()? onDeletePressed;
+  final Widget deleteWidget;
+  final Widget forgotPassWidget;
+
   Keyboard({
     Key? key,
     required this.keyboardUIConfig,
     required this.onKeyboardTap,
+    required this.onForgotPasswordPressed,
+    required this.onDeletePressed,
+    required this.deleteWidget,
+    required this.forgotPassWidget,
     this.digits,
   }) : super(key: key);
 
@@ -53,7 +63,20 @@ class Keyboard extends StatelessWidget {
   Widget _buildKeyboard(BuildContext context) {
     List<String> keyboardItems = List.filled(10, '0');
     if (digits == null || digits!.isEmpty) {
-      keyboardItems = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+      keyboardItems = [
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        'fp',
+        '0',
+        'del'
+      ];
     } else {
       keyboardItems = digits!;
     }
@@ -78,7 +101,8 @@ class Keyboard extends StatelessWidget {
               onKeyboardTap(event.logicalKey.keyLabel);
               return;
             }
-            if (event.logicalKey.keyLabel== 'Backspace' || event.logicalKey.keyLabel == 'Delete') {
+            if (event.logicalKey.keyLabel == 'Backspace' ||
+                event.logicalKey.keyLabel == 'Delete') {
               onKeyboardTap(Keyboard.deleteButton);
               return;
             }
@@ -86,7 +110,21 @@ class Keyboard extends StatelessWidget {
         },
         child: AlignedGrid(
           keyboardSize: keyboardSize,
-          children: List.generate(10, (index) {
+          children: List.generate(12, (index) {
+            if (index == 9) {
+              return DeleteButton(
+                margin: EdgeInsets.zero,
+                onPressed: onForgotPasswordPressed,
+                child: forgotPassWidget,
+              );
+            }
+            if (index == 11) {
+              return DeleteButton(
+                margin: EdgeInsets.zero,
+                onPressed: onDeletePressed,
+                child: deleteWidget,
+              );
+            }
             return _buildKeyboardDigit(keyboardItems[index]);
           }),
         ),

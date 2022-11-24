@@ -128,6 +128,13 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             digits: digits,
             passwordDigits: 6,
             bottomWidget: _buildPasscodeRestoreButton(),
+            onForgotPasswordPressed: () {},
+            forgotPassButton: Container(
+              child: Text(
+                'Forgot Passcode?',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
           ),
         ));
   }

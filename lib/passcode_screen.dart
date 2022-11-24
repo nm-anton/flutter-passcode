@@ -19,6 +19,7 @@ class PasscodeScreen extends StatefulWidget {
   // Cancel button and delete button will be switched based on the screen state
   final Widget cancelButton;
   final Widget deleteButton;
+  final Widget forgotPassButton;
   final Stream<bool> shouldTriggerVerification;
   final CircleUIConfig circleUIConfig;
   final KeyboardUIConfig keyboardUIConfig;
@@ -31,6 +32,8 @@ class PasscodeScreen extends StatefulWidget {
   final Widget? bottomWidget;
   final List<String>? digits;
 
+  final void Function()? onForgotPasswordPressed;
+
   PasscodeScreen({
     Key? key,
     required this.title,
@@ -39,6 +42,8 @@ class PasscodeScreen extends StatefulWidget {
     required this.cancelButton,
     required this.deleteButton,
     required this.shouldTriggerVerification,
+    required this.onForgotPasswordPressed,
+    required this.forgotPassButton,
     this.isValidCallback,
     CircleUIConfig? circleUIConfig,
     KeyboardUIConfig? keyboardUIConfig,
@@ -124,12 +129,6 @@ class _PasscodeScreenState extends State<PasscodeScreen>
               ),
             ),
           ),
-          Positioned(
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: _buildDeleteButton(),
-            ),
-          ),
         ],
       );
 
@@ -182,7 +181,12 @@ class _PasscodeScreenState extends State<PasscodeScreen>
           Positioned(
             child: Align(
               alignment: Alignment.bottomRight,
-              child: _buildDeleteButton(),
+              child: DeleteButton(
+                margin: widget.keyboardUIConfig.digitInnerMargin,
+                onPressed: _onDeleteCancelButtonPressed,
+                child: widget.deleteButton,
+              ),
+              // child: _buildDeleteButton(),
             ),
           )
         ],
@@ -193,6 +197,10 @@ class _PasscodeScreenState extends State<PasscodeScreen>
           onKeyboardTap: _onKeyboardButtonPressed,
           keyboardUIConfig: widget.keyboardUIConfig,
           digits: widget.digits,
+          deleteWidget: widget.deleteButton,
+          forgotPassWidget: widget.forgotPassButton,
+          onDeletePressed: _onDeleteCancelButtonPressed,
+          onForgotPasswordPressed: widget.onForgotPasswordPressed,
         ),
       );
 
@@ -221,10 +229,6 @@ class _PasscodeScreenState extends State<PasscodeScreen>
         enteredPasscode =
             enteredPasscode.substring(0, enteredPasscode.length - 1);
       });
-    } else {
-      if (widget.cancelCallback != null) {
-        widget.cancelCallback!();
-      }
     }
   }
 
@@ -277,16 +281,26 @@ class _PasscodeScreenState extends State<PasscodeScreen>
           "You didn't implement validation callback. Please handle a state by yourself then.");
     }
   }
+}
 
-  Widget _buildDeleteButton() {
+class DeleteButton extends StatelessWidget {
+  const DeleteButton(
+      {Key? key, this.onPressed, required this.margin, required this.child})
+      : super(key: key);
+
+  final void Function()? onPressed;
+  final EdgeInsetsGeometry margin;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
+      key: key,
       child: CupertinoButton(
-        onPressed: _onDeleteCancelButtonPressed,
+        onPressed: onPressed,
         child: Container(
-          margin: widget.keyboardUIConfig.digitInnerMargin,
-          child: enteredPasscode.length == 0
-              ? widget.cancelButton
-              : widget.deleteButton,
+          margin: margin,
+          child: child,
         ),
       ),
     );

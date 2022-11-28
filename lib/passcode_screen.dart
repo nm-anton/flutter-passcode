@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:passcode_screen/circle.dart';
 import 'package:passcode_screen/keyboard.dart';
-import 'package:passcode_screen/shake_curve.dart';
 
 typedef PasswordEnteredCallback = void Function(String text);
 typedef IsValidCallback = void Function();
@@ -57,36 +56,15 @@ class PasscodeScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _PasscodeScreenState();
 }
 
-class _PasscodeScreenState extends State<PasscodeScreen>
-    with SingleTickerProviderStateMixin {
+class _PasscodeScreenState extends State<PasscodeScreen> {
   late StreamSubscription<bool> streamSubscription;
   String enteredPasscode = '';
-  late AnimationController controller;
-  late Animation<double> animation;
 
   @override
   initState() {
     super.initState();
     streamSubscription = widget.shouldTriggerVerification
         .listen((isValid) => _showValidation(isValid));
-    controller = AnimationController(
-        duration: const Duration(milliseconds: 500), vsync: this);
-    final Animation curve =
-        CurvedAnimation(parent: controller, curve: ShakeCurve());
-    animation = Tween(begin: 0.0, end: 10.0).animate(curve as Animation<double>)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          setState(() {
-            enteredPasscode = '';
-            controller.value = 0;
-          });
-        }
-      })
-      ..addListener(() {
-        setState(() {
-          // the animation object’s value is the changed state
-        });
-      });
   }
 
   @override
@@ -204,7 +182,6 @@ class _PasscodeScreenState extends State<PasscodeScreen>
   List<Widget> _buildCircles() {
     var list = <Widget>[];
     var config = widget.circleUIConfig;
-    var extraSize = animation.value;
     for (int i = 0; i < widget.passwordDigits; i++) {
       list.add(
         Container(
@@ -212,7 +189,6 @@ class _PasscodeScreenState extends State<PasscodeScreen>
           child: Circle(
             filled: i < enteredPasscode.length,
             circleUIConfig: config,
-            extraSize: extraSize,
           ),
         ),
       );
@@ -257,7 +233,6 @@ class _PasscodeScreenState extends State<PasscodeScreen>
 
   @override
   dispose() {
-    controller.dispose();
     streamSubscription.cancel();
     super.dispose();
   }
@@ -265,8 +240,6 @@ class _PasscodeScreenState extends State<PasscodeScreen>
   _showValidation(bool isValid) {
     if (isValid) {
       Navigator.maybePop(context).then((pop) => _validationCallback());
-    } else {
-      controller.forward();
     }
   }
 

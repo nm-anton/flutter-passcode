@@ -74,9 +74,7 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
       body: SafeArea(
         child: OrientationBuilder(
           builder: (context, orientation) {
-            return orientation == Orientation.portrait
-                ? _buildPortraitPasscodeScreen()
-                : _buildLandscapePasscodeScreen();
+            return _buildPortraitPasscodeScreen();
           },
         ),
       ),

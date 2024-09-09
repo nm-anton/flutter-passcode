@@ -83,22 +83,30 @@ class _PasscodeScreenState extends State<PasscodeScreen> {
 
   _buildPortraitPasscodeScreen() => Stack(
         children: [
-          Positioned(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  widget.title,
-                  Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: _buildCircles(),
-                    ),
+          Positioned.fill(
+            child: SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: 500,
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      widget.title,
+                      Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: _buildCircles(),
+                        ),
+                      ),
+                      _buildKeyboard(),
+                      widget.bottomWidget ?? Container()
+                    ],
                   ),
-                  _buildKeyboard(),
-                  widget.bottomWidget ?? Container()
-                ],
+                ),
               ),
             ),
           ),
